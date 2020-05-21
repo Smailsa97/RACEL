@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.racel.Constants;
 import com.example.racel.R;
 import com.example.racel.data.PokeApi;
+import com.example.racel.presentation.controller.MainController;
 import com.example.racel.presentation.model.Pokemon;
 import com.example.racel.presentation.model.RestPokemonResponse;
 import com.google.gson.Gson;
@@ -29,53 +30,33 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String BASE_URL = "https://pokeapi.co/";
+
 
     private RecyclerView recyclerView;
     private ListAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private SharedPreferences sharedPreferences;
     private Gson gson ;
 
+    private MainController controller;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       sharedPreferences = getSharedPreferences("application_esiea", Context.MODE_PRIVATE);
-       gson = new GsonBuilder()
-                .setLenient()
-                .create();
+        controller = new MainController(
+                this,
+                new GsonBuilder()
+                        .setLenient()
+                        .create(),
+                getSharedPreferences("application_esiea", Context.MODE_PRIVATE)
 
-       List<Pokemon> pokemonList = getDataFromCache();
-       if (pokemonList !=null  ){
-           showList(pokemonList);
-
-       }else{
-           makeApiCall();
-       }
-
-
-    }
-
-    private List<Pokemon> getDataFromCache() {
-
-        String jsonPokemon = sharedPreferences.getString(Constants.KEY_POKEMON_LIST, null);
-
-        if(jsonPokemon == null) {
-            return null ;
-        }else{
-            Type listType = new TypeToken<List<Pokemon>>(){}.getType();
-            return gson.fromJson(jsonPokemon, listType);
-        }
-
-
-
+        );
+        controller.onStart();
 
     }
 
 
-    private void showList(List<Pokemon> pokemonList) {
+    public void showList(List<Pokemon> pokemonList) {
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -90,50 +71,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void makeApiCall(){
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build();
-
-            final PokeApi pokeApi = retrofit.create(PokeApi.class);
-
-            Call<RestPokemonResponse> call = pokeApi.getPokemonResponse();
-            call.enqueue(new Callback<RestPokemonResponse>() {
-                @Override
-                public void onResponse(Call<RestPokemonResponse> call, Response<RestPokemonResponse> response) {
-                    if(response.isSuccessful() && response.body() != null) {
-                        List<Pokemon> pokemonList = response.body().getResults();
-                        saveList(pokemonList);
-                        showList(pokemonList);
-                    }
-                    else{
-                        showError();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<RestPokemonResponse> call, Throwable t) {
-                    showError();
-                }
-            });
 
 
-
-
-    }
-
-    private void saveList(List<Pokemon> pokemonList) {
-        String jsonString = gson.toJson(pokemonList);
-         sharedPreferences
-                .edit()
-                .putString(Constants.KEY_POKEMON_LIST, jsonString)
-                .apply();
-
-        Toast.makeText(getApplicationContext(), "API Saved", Toast.LENGTH_SHORT).show();
-    }
-
-    private void showError() {
+    public void showError() {
         Toast.makeText(getApplicationContext(), "API Error", Toast.LENGTH_SHORT).show();
     }
 
