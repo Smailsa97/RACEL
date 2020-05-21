@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.racel.Constants;
 import com.example.racel.R;
+import com.example.racel.Singletons;
 import com.example.racel.data.PokeApi;
 import com.example.racel.presentation.controller.MainController;
 import com.example.racel.presentation.model.Pokemon;
@@ -45,10 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
         controller = new MainController(
                 this,
-                new GsonBuilder()
-                        .setLenient()
-                        .create(),
-                getSharedPreferences("application_esiea", Context.MODE_PRIVATE)
+                Singletons.getGson(),
+                Singletons.getSharedPreferencesInstance(getApplicationContext())
 
         );
         controller.onStart();
