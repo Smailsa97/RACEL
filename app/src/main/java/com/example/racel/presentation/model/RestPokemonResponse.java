@@ -1,4 +1,4 @@
-package com.example.racel;
+package com.example.racel.presentation.model;
 
 import java.util.List;
 

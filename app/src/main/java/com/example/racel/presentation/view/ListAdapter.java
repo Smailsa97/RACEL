@@ -1,4 +1,4 @@
-package com.example.racel;
+package com.example.racel.presentation.view;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+
+import com.example.racel.R;
+import com.example.racel.presentation.model.Pokemon;
 
 import java.util.List;
 
