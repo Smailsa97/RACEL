@@ -15,12 +15,12 @@ Cette application mobile codé en Java affiche une liste de pokemon en utilisant
 
 **Consignes respectées**
 
--Afficher une liste d'éléments (Pokemon)
--Afficher le detail d'un élément 
--Appel WebService à une API REST (https://pokeapi.co/)
--Stockage de données en cache (en utilisant sharedpreferences)
--Architecture de type MVC
--Respect du principe SOLID
--Utilisation du Singleton 
+- Afficher une liste d'éléments (Pokemon)
+- Afficher le detail d'un élément 
+- Appel WebService à une API REST (https://pokeapi.co/)
+- Stockage de données en cache (en utilisant sharedpreferences)
+- Architecture de type MVC
+- Respect du principe SOLID
+- Utilisation du Singleton 
 
 ---
